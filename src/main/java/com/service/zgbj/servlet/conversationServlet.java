@@ -1,6 +1,6 @@
 package com.service.zgbj.servlet;
 
-import com.service.zgbj.mysqlTab.controller.HistoryServiceImpl;
+import com.service.zgbj.mysqlTab.impl.HistoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by fengzhangwei on 2020/10/14.
  */
-@WebServlet("/chat/getConversation")
+//@WebServlet("/chat/getConversation")
 public class conversationServlet extends HttpServlet {
     @Autowired
     private HistoryServiceImpl service;

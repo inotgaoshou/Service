@@ -1,6 +1,6 @@
 package com.service.zgbj.servlet;
 
-import com.service.zgbj.mysqlTab.controller.UserServiceImpl;
+import com.service.zgbj.mysqlTab.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by fengzhangwei on 2020/5/20.
  */
-@WebServlet("/friend/findFriend")
+//@WebServlet("/friend/findFriend")
 public class findFriendServlet extends HttpServlet {
     @Autowired
     private UserServiceImpl service;

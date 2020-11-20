@@ -110,7 +110,7 @@
 	</dependencies>
 
 	<build>
-
+        <finalName>chat-web</finalName>
 		<plugins>
 
 			<plugin>

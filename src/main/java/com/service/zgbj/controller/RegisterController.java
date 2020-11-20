@@ -1,33 +1,32 @@
-package com.service.zgbj.servlet;
+package com.service.zgbj.controller;
 
 import com.service.zgbj.mysqlTab.impl.HistoryServiceImpl;
 import com.service.zgbj.mysqlTab.impl.UserServiceImpl;
 import com.service.zgbj.utils.OfTenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
-//@WebServlet("/rgs/user")
-public class registerServlet extends HttpServlet{
+/**
+ * @author yubin
+ * @version 1.0.0
+ * @ClassName RegisterController.java
+ * @Description TODO
+ * @createTime 2020年11月20日 12:27:00
+ */
+@RestController
+@RequestMapping("/rgs")
+public class RegisterController {
 
     @Autowired
     private UserServiceImpl service;
     @Autowired
     private HistoryServiceImpl historyService;
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        this.doPost(req,resp);
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html;charset=utf-8");
+    @RequestMapping("/user")
+    public String register(HttpServletRequest req){
         String email = req.getParameter("email");
         String imageUrl = req.getParameter("imageUrl");
         String location = req.getParameter("location");
@@ -39,6 +38,7 @@ public class registerServlet extends HttpServlet{
         historyService.createTable(randomUid);
         service.createTableFriend(randomUid);
         service.createTableFriendMsg(randomUid);
-        resp.getWriter().write(service.register(email,imageUrl,location,mobile,pwd,sex,name,randomUid));
+        String register = service.register(email, imageUrl, location, mobile, pwd, sex, name, randomUid);
+        return register;
     }
 }

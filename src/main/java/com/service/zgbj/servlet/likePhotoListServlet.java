@@ -1,6 +1,6 @@
 package com.service.zgbj.servlet;
 
-import com.service.zgbj.mysqlTab.controller.FileImpl;
+import com.service.zgbj.mysqlTab.impl.FileImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  * Created by fengzhangwei on 2020/10/21.
  */
-@WebServlet("/photo/likePhotoList")
+//@WebServlet("/photo/likePhotoList")
 public class likePhotoListServlet extends HttpServlet {
     @Autowired
     private FileImpl fileService;

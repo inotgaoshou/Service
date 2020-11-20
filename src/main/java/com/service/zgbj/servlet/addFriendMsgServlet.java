@@ -1,6 +1,6 @@
 package com.service.zgbj.servlet;
 
-import com.service.zgbj.mysqlTab.controller.UserServiceImpl;
+import com.service.zgbj.mysqlTab.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;

@@ -1,34 +1,39 @@
-package com.service.zgbj.servlet;
+package com.service.zgbj.controller;
 
 import com.service.zgbj.mysqlTab.impl.FileImpl;
 import com.service.zgbj.utils.GsonUtil;
 import com.service.zgbj.utils.OSSUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- * Created by fengzhangwei on 2020/6/5.
+ * @author yubin
+ * @version 1.0.0
+ * @ClassName UploadController.java
+ * @Description TODO
+ * @createTime 2020年11月20日 12:30:00
  */
-//@WebServlet("/uploadFile")
-public class upLoadServlet extends HttpServlet {
+@RestController
+@RequestMapping("/uploadFile")
+public class UploadController {
 
     @Autowired
     private FileImpl fileService;
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void upload(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
         HashMap<String, Object> statusMap = new HashMap<>();
 
 
@@ -70,10 +75,7 @@ public class upLoadServlet extends HttpServlet {
                     statusMap.put("url", null);
                 }
                 resp.getWriter().write(GsonUtil.BeanToJson(statusMap));
-
             }
         }
-
     }
-
 }

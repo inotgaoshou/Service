@@ -1,4 +1,4 @@
-package com.service.zgbj.mysqlTab.controller;
+package com.service.zgbj.mysqlTab.impl;
 
 import com.service.zgbj.im.ChatMessage;
 import com.service.zgbj.mysqlTab.HistoryService;

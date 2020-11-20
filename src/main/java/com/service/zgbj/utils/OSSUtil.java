@@ -4,15 +4,9 @@ import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.*;
-import com.service.zgbj.mysqlTab.controller.FileImpl;
-import com.service.zgbj.mysqlTab.controller.HistoryServiceImpl;
 import com.service.zgbj.oss.ConstantProperties;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 /**

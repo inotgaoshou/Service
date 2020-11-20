@@ -1,7 +1,6 @@
-package com.service.zgbj.mysqlTab.controller;
+package com.service.zgbj.mysqlTab.impl;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.service.zgbj.im.ChatMessage;
 import com.service.zgbj.im.FriendBean;
 import com.service.zgbj.im.SocketManager;
@@ -10,7 +9,6 @@ import com.service.zgbj.mysqlTab.HistoryService;
 import com.service.zgbj.mysqlTab.UserService;
 import com.service.zgbj.utils.GsonUtil;
 import com.service.zgbj.utils.OfTenUtils;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

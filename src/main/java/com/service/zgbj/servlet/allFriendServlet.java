@@ -1,6 +1,6 @@
 package com.service.zgbj.servlet;
 
-import com.service.zgbj.mysqlTab.controller.UserServiceImpl;
+import com.service.zgbj.mysqlTab.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/friend/allFriend")
+//@WebServlet("/friend/allFriend")
 public class allFriendServlet extends HttpServlet {
     @Autowired
     private UserServiceImpl service;

@@ -1,14 +1,12 @@
 package com.service.zgbj.thread;
 
-import com.corundumstudio.socketio.AckRequest;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.service.zgbj.im.ChatMessage;
 import com.service.zgbj.im.RedEnvelopeBean;
 import com.service.zgbj.im.RedEnvelopeBody;
 import com.service.zgbj.im.SocketManager;
-import com.service.zgbj.mysqlTab.DataBaseService;
-import com.service.zgbj.mysqlTab.controller.ChatServiceImpl;
-import com.service.zgbj.mysqlTab.controller.UserServiceImpl;
+import com.service.zgbj.mysqlTab.impl.ChatServiceImpl;
+import com.service.zgbj.mysqlTab.impl.UserServiceImpl;
 import com.service.zgbj.utils.GsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 

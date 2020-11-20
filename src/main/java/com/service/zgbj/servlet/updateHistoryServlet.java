@@ -1,9 +1,6 @@
 package com.service.zgbj.servlet;
 
-import com.service.zgbj.im.RedEnvelopeBean;
-import com.service.zgbj.mysqlTab.controller.ChatServiceImpl;
-import com.service.zgbj.mysqlTab.controller.HistoryServiceImpl;
-import com.service.zgbj.mysqlTab.controller.UserServiceImpl;
+import com.service.zgbj.mysqlTab.impl.HistoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
@@ -13,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/updateHistory/user")
+//@WebServlet("/updateHistory/user")
 public class updateHistoryServlet extends HttpServlet {
 
     @Autowired
