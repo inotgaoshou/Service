@@ -3,6 +3,7 @@ package com.service.zgbj.mysqlTab.impl;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.service.zgbj.im.SocketManager;
 import com.service.zgbj.mysqlTab.DataBaseService;
+import com.service.zgbj.redis.JedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,13 @@ public class DataBaseImpl implements DataBaseService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private UserServiceImpl service;
+    private UserServiceImpl userService;
     @Autowired
     private ChatServiceImpl chatService;
     @Autowired
     private HistoryServiceImpl historyService;
+    @Autowired
+    private JedisService jedisService;
 
     @Override
     public void displayDataBase(SocketIOServer server) {
@@ -27,7 +30,7 @@ public class DataBaseImpl implements DataBaseService {
             System.out.println("数据库---mysql----创建!");
         }
         createTable();
-        new SocketManager(server, service, chatService, historyService);
+        new SocketManager(server, userService, chatService, historyService,jedisService);
     }
 
     private void createTable() {

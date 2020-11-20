@@ -1,14 +1,13 @@
 package com.service.zgbj.mysqlTab.impl;
 
 import com.corundumstudio.socketio.SocketIOClient;
-import com.service.zgbj.im.ChatMessage;
-import com.service.zgbj.im.FriendBean;
-import com.service.zgbj.im.SocketManager;
-import com.service.zgbj.im.TextBody;
+import com.service.zgbj.im.*;
 import com.service.zgbj.mysqlTab.HistoryService;
 import com.service.zgbj.mysqlTab.UserService;
+import com.service.zgbj.redis.JedisService;
 import com.service.zgbj.utils.GsonUtil;
 import com.service.zgbj.utils.OfTenUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,11 +18,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService, HistoryService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+
 
 
     @Override
@@ -522,24 +524,30 @@ public class UserServiceImpl implements UserService, HistoryService {
     public String addFriendMsg(String to_id, String from_id, String pid, int friend_type, int source, String content) {
         createTable(to_id, from_id);
         String json = GsonUtil.BeanToJson(updateInsertTable(to_id, from_id, pid, friend_type, source, content));
-        HashMap<String, SocketIOClient> map = SocketManager.mClientMap.get(to_id);
-        SocketIOClient client = map.get(getToken(to_id));
+
         String info = getUserInfo(from_id);
+
+//        HashMap<String, SocketIOClient> map = SocketManager.mClientMap.get(to_id);
+//        SocketIOClient client = map.get(getToken(to_id));
         ChatMessage message = new ChatMessage();
-        if (client != null) {
+//        if (client != null) {
             FriendBean bean = GsonUtil.GsonToBean(info, FriendBean.class);
             String name = bean.getData().getUsername();
             if (!name.isEmpty()) {
-                message.setType(4);
+                message.setFromId(from_id);
+                message.setType(MessageType.MSG_SINGLE_CHAT);
+                message.setToId(to_id);
                 message.setBody(name + "请求加为好友");
-                SocketManager.sendChatMessage(client, message);
+//                SocketManager.sendChatMessage(client, message);
+
+                SocketManager.publishImMessage(message);
             } else {
                 System.out.println("name is null");
             }
-        } else {
-            System.out.println("不在线");
-        }
-        System.out.println(json);
+//        } else {
+//            System.out.println("不在线");
+//        }
+        log.info("addFriendMsg json:{}",json);
         return GsonUtil.unicodeToUtf8(json);
     }
 
