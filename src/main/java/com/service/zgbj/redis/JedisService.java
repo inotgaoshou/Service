@@ -2,9 +2,6 @@ package com.service.zgbj.redis;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.service.zgbj.exception.RedisDataAccessException;
-import net.sf.json.JSON;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +67,7 @@ public class JedisService {
         return Boolean.FALSE;
     }
 
-    public byte[] readByte(String key) throws RedisDataAccessException {
+    public byte[] readByte(String key) throws Exception {
         byte[] ret = null;
         Jedis rjedis = null;
         try {
@@ -82,7 +79,7 @@ public class JedisService {
             }
         } catch (Exception e) {
             LOG.error("read from jedis error. key:{} msg:{}", key, e);
-            throw new RedisDataAccessException("redis read error.", e);
+            throw new Exception("redis read error.", e);
         } finally {
             if (rjedis != null) {
                 readJedisPoolManager.returnJedis(rjedis);
@@ -117,7 +114,6 @@ public class JedisService {
                 wjedis.setex(jedisKey, expireTime, data);
             } catch (Exception e) {
 //                LOG.error("write to jedis error. key:{} data:{} msg:{}", key, content, e);
-                throw new RedisDataAccessException("redis read error.", e);
             } finally {
                 if (wjedis != null) {
                     writeJedisPoolManager.returnJedis(wjedis);
@@ -126,7 +122,7 @@ public class JedisService {
         }
     }
 
-    public void write(String key, byte[] content, int expireTime) throws RedisDataAccessException {
+    public void write(String key, byte[] content, int expireTime) throws Exception {
         Jedis wjedis = null;
         try {
             wjedis = writeJedisPoolManager.getJedis();
@@ -134,7 +130,7 @@ public class JedisService {
             byte[] jedisKey = key.getBytes();
             wjedis.setex(jedisKey, expireTime, data);
         } catch (Exception e) {
-            throw new RedisDataAccessException("Failed to write key " + key, e);
+            throw new Exception("Failed to write key " + key, e);
         } finally {
             if (wjedis != null) {
                 writeJedisPoolManager.returnJedis(wjedis);
@@ -749,14 +745,14 @@ public class JedisService {
         }
     }
 
-    public void remove(String key) throws RedisDataAccessException {
+    public void remove(String key) throws Exception {
         Jedis wjedis = null;
         try {
             wjedis = writeJedisPoolManager.getJedis();
             wjedis.del(key);
         } catch (Exception e) {
             LOG.error("remove error. key:{} msg:{}", key, e);
-            throw new RedisDataAccessException("Failed to remove key " + key, e);
+            throw new Exception("Failed to remove key " + key, e);
         } finally {
             if (wjedis != null) {
                 writeJedisPoolManager.returnJedis(wjedis);
@@ -1440,9 +1436,9 @@ public class JedisService {
     /**
      * 批量删除redisKey
      * @param key
-     * @throws RedisDataAccessException
+     * @throws Exception
      */
-    public void batchRemove(String key) throws RedisDataAccessException {
+    public void batchRemove(String key) throws Exception {
         Jedis wjedis = null;
         try {
             wjedis = writeJedisPoolManager.getJedis();
@@ -1454,7 +1450,7 @@ public class JedisService {
             }
         } catch (Exception e) {
             LOG.error("batchRemove error. key:{} msg:{}", key, e);
-            throw new RedisDataAccessException("Failed to batchRemove key " + key, e);
+            throw new Exception("Failed to batchRemove key " + key, e);
         } finally {
             if (wjedis != null) {
                 writeJedisPoolManager.returnJedis(wjedis);
@@ -1465,9 +1461,9 @@ public class JedisService {
     /**
      * 批量删除key
      * @param keys
-     * @throws RedisDataAccessException
+     * @throws Exception
      */
-    public void batchRemoveKey(String... keys) throws RedisDataAccessException {
+    public void batchRemoveKey(String... keys) throws Exception {
         Jedis wjedis = null;
         try {
             if(keys.length>0) {
@@ -1480,7 +1476,7 @@ public class JedisService {
             }
         } catch (Exception e) {
             LOG.error("batchRemoveKey error. key:{}", keys);
-            throw new RedisDataAccessException("Failed to batchRemoveKey key " + keys);
+            throw new Exception("Failed to batchRemoveKey key " + keys);
         } finally {
             if (wjedis != null) {
                 writeJedisPoolManager.returnJedis(wjedis);

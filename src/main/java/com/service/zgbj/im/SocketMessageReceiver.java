@@ -40,21 +40,21 @@ public class SocketMessageReceiver {
         log.info("receive socket push message, message = {}", message);
         try {
             ChatMessage chatMessage = GsonUtil.GsonToBean(message, ChatMessage.class);
-            if(chatMessage.getType() == MessageType.MSG_SINGLE_CHAT){
-                HashMap<String, SocketIOClient> map = SocketManager.mClientMap.get(chatMessage.getToId());
-                if(map != null){
-                    SocketIOClient client = map.get(getToken(chatMessage.getToId()));
-                    if(client != null){
-                        SocketManager.sendChatMessage(client, chatMessage);
-                    }else{
-                        //添加分布式锁
-//                        SocketManager.addLineMsg(chatMessage);
-                    }
-                }
-
-            }else if(chatMessage.getType() == MessageType.MSG_ROOM_CHAT){
-
-            }
+//            if(chatMessage.getType() == MessageType.MSG_SINGLE_CHAT){
+//                HashMap<String, SocketIOClient> map = SocketManager.mClientMap.get(chatMessage.getToId());
+//                if(map != null){
+//                    SocketIOClient client = map.get(getToken(chatMessage.getToId()));
+//                    if(client != null){
+//                        SocketManager.sendChatMessage(client, chatMessage);
+//                    }else{
+//                        //添加分布式锁
+////                        SocketManager.addLineMsg(chatMessage);
+//                    }
+//                }
+//
+//            }else if(chatMessage.getType() == MessageType.MSG_ROOM_CHAT){
+//
+//            }
         } catch (Exception e) {
             log.error("receive  socket push message error, message = {}", message, e);
         }

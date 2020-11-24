@@ -6,9 +6,11 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
 import com.corundumstudio.socketio.listener.DisconnectListener;
+import com.service.zgbj.constant.Constant;
 import com.service.zgbj.mysqlTab.impl.ChatServiceImpl;
 import com.service.zgbj.mysqlTab.impl.HistoryServiceImpl;
 import com.service.zgbj.mysqlTab.impl.UserServiceImpl;
+import com.service.zgbj.redis.JedisService;
 import com.service.zgbj.utils.DateUtils;
 import com.service.zgbj.utils.GsonUtil;
 import com.service.zgbj.utils.OfTenUtils;
@@ -32,14 +34,18 @@ public class SocketManager {
     private static ChatServiceImpl chatService;
     public static SocketIOServer socketService;
     private HistoryServiceImpl historyService;
+    private static JedisService jedisService;
+
+
 
 
     public SocketManager(SocketIOServer server, UserServiceImpl userService,
-                         ChatServiceImpl chatServiceImp, HistoryServiceImpl historyServiceImpl) {
+                         ChatServiceImpl chatServiceImp, HistoryServiceImpl historyServiceImpl,JedisService jedisService) {
 
         this.sqlService = userService;
         this.chatService = chatServiceImp;
         this.historyService = historyServiceImpl;
+        this.jedisService = jedisService;
 
         if (server != null) {
             this.socketService = server;
@@ -259,6 +265,13 @@ public class SocketManager {
         if (aBoolean) {
             log.info("-------添加离线消息成功--------");
         }
+    }
+
+
+    public static void publishImMessage(ChatMessage message){
+        String json = GsonUtil.BeanToJson(message);
+        log.info("publishImMessage json:{}",json);
+        jedisService.publish(Constant.RedisKey.im_message_subscribe, json);
     }
 
     public static void sendChatMessage(SocketIOClient client, ChatMessage s) {

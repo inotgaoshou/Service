@@ -16,7 +16,7 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
  */
 @Configuration
 @EnableCaching
-public class RedisCacheConfig {
+public class RedisSubConfig {
 
 
     @Autowired
