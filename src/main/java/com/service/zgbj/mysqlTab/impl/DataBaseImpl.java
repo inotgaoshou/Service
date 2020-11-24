@@ -26,10 +26,10 @@ public class DataBaseImpl implements DataBaseService {
 
     @Override
     public void displayDataBase(SocketIOServer server) {
-        String createSql = "CREATE DATABASE IF NOT EXISTS mysql DEFAULT CHARACTER SET utf8";
+        String createSql = "CREATE DATABASE IF NOT EXISTS im_app DEFAULT CHARACTER SET utf8";
         int code = jdbcTemplate.update(createSql);
         if (code > 0) {
-            log.info("数据库---mysql----创建!");
+            log.info("数据库---im_app----创建!");
         }
         createTable();
         new SocketManager(server, service, chatService, historyService, jedisService);
