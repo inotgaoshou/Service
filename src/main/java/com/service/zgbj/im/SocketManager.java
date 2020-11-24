@@ -201,7 +201,7 @@ public class SocketManager {
 
         @Override
         public void onData(SocketIOClient socketIOClient, String s, AckRequest ackRequest) throws Exception {
-            System.out.println("监听到消息========" + s);
+            log.info("监听到消息========{}", s);
             mAckRequest = ackRequest;
             ChatMessage chatMessage = GsonUtil.GsonToBean(s, ChatMessage.class);
             handleChatMessage(chatMessage, ackRequest);
