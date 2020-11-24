@@ -38,7 +38,7 @@ public class ChatServiceImpl implements ChatService,SocketConnectService{
     public List<ChatMessage> getOffLineMsg(String id) {
         List<ChatMessage> chatMessageList = new ArrayList<>();
         String sql = "select * from table_offline_msg WHERE to_id = " + "'" + id + "'";
-        System.out.println(sql);
+        log.info("getOffLineMsg sql:{}",sql);
         try {
             List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
             for (int i=0;i<list.size();i++){
@@ -143,7 +143,7 @@ public class ChatServiceImpl implements ChatService,SocketConnectService{
     @Override
     public void addRedEnvelope(RedEnvelopeBean bean) {
         String sql = "INSERT into table_red_envelope(from_id,to_id,pid,body,time,status,conversation) VALUE (?,?,?,?,?,?,?)";
-        System.out.println(sql);
+        log.info("addRedEnvelope sql:{}",sql);
         Object args[] = {bean.getFromId(), bean.getToId(), bean.getPid(), bean.getBody(), bean.getTime(), bean.getStatus(), bean.getConversation()};
         jdbcTemplate.update(sql, args);
     }
@@ -152,14 +152,14 @@ public class ChatServiceImpl implements ChatService,SocketConnectService{
     public void insert(SocketBean socketBean) {
         try {
             String sql = "INSERT into table_socket (uid,token,mobile) VALUE (?,?,?)";
-            System.out.println(sql);
+            log.info("insert sql:{}",sql);
             Object args[] = {socketBean.getUid(), socketBean.getToken(), socketBean.getMobile()};
             int code = jdbcTemplate.update(sql, args);
             if (code > 0) {
-                System.out.println("添加成功");
+                log.info("添加成功");
             }
         } catch (Exception e) {
-            System.out.println("insert socket" + e.toString());
+            log.error("insert",e);
         }
     }
 
@@ -168,11 +168,11 @@ public class ChatServiceImpl implements ChatService,SocketConnectService{
         List<Map<String, Object>> map;
         try {
             String sql = "SELECT * FROM table_socket WHERE uid = " + "'" + uid + "'";
-            System.out.println(sql);
+            log.info("whereIsOnline sql:{}",sql);
             map = jdbcTemplate.queryForList(sql);
         } catch (Exception e) {
             map = null;
-            System.out.println("whereIsOnline:" + e.toString());
+            log.error("whereIsOnline",e);
         }
         if (map != null && map.size() > 0) {
             return true;
@@ -185,13 +185,13 @@ public class ChatServiceImpl implements ChatService,SocketConnectService{
     public void delete(String token) {
         try {
             String sql = "DELETE FROM table_socket WHERE token = " + "'" + token + "'";
-            System.out.println(sql);
+            log.info("delete token sql:{}",sql);
             int update = jdbcTemplate.update(sql);
             if (update > 0) {
-                System.out.println("删除成功");
+                log.info("delete token 删除成功");
             }
         } catch (Exception e) {
-            System.out.println("delete token:" + e.toString());
+            log.error("delete token",e);
         }
     }
 
@@ -200,15 +200,15 @@ public class ChatServiceImpl implements ChatService,SocketConnectService{
         List<Map<String, Object>> map;
         try {
             String sql = "SELECT * FROM table_socket WHERE uid = " + "'" + uid + "'";
-            System.out.println(sql);
+            log.info("getToken sql:{}",sql);
             map = jdbcTemplate.queryForList(sql);
         } catch (Exception e) {
             map = null;
-            System.out.println("getToken:" + e.toString());
+            log.error("getToken",e);
         }
         if (map != null && map.size() > 0) {
             String token = map.get(0).get("token").toString();
-            System.out.println("token:" + token);
+            log.info("getToken token:{}",token);
             return token;
         }
         return "";
@@ -218,7 +218,7 @@ public class ChatServiceImpl implements ChatService,SocketConnectService{
     public void updateToken(String token, String uid) {
         try {
             String sql = "UPDATE table_socket SET token =" + "'" + token + "'" + "WHERE uid = " + "'" + uid + "'";
-            System.out.println(sql);
+            log.info("updateToken sql:{}",sql);
             int update = jdbcTemplate.update(sql);
             if (update > 0) {
                 log.info("updateToken token:{},uid:{},修改成功",token,uid);

@@ -65,12 +65,12 @@ public class SocketManager {
         @Override
         public void onConnect(SocketIOClient socketIOClient) {
             SocketBean socketInfo = getClientInfo(socketIOClient);
-            System.out.println("======token=====" + socketInfo.getToken());
-            System.out.println("======uid=====" + socketInfo.getUid());
-            System.out.println("======mobile=====" + socketInfo.getMobile());
-            System.out.println("======desc=====" + socketInfo.getDesc());
-            System.out.println("======netCode=====" + socketInfo.getOnline());
-            System.out.println("--------客户端连接------");
+            log.info("======token=====" + socketInfo.getToken());
+            log.info("======uid=====" + socketInfo.getUid());
+            log.info("======mobile=====" + socketInfo.getMobile());
+            log.info("======desc=====" + socketInfo.getDesc());
+            log.info("======netCode=====" + socketInfo.getOnline());
+            log.info("--------客户端连接------");
 
             Boolean online = chatService.whereIsOnline(socketInfo.getUid());
             log.info("是否存在:" + online);
@@ -134,7 +134,7 @@ public class SocketManager {
             } catch (Exception e) {
 
             }
-            System.out.println("-------当前连接人数--------" + (mClientMap.size()));
+            log.info("-------当前连接人数--------" + (mClientMap.size()));
             sendChatMessage(socketInfo.getUid());
         }
     }

@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService, HistoryService {
             if (map.get("uid") != null && map.get("online") != null) {
                 String sql_user = "SELECT * FROM table_user";
 //            String sql = "SELECT * FROM friend_ + " + OfTenUtils.replace(uid) + " where friend_type = 1 ";
-                System.out.println(sql_user);
+                log.info("updateUser sql_user:{}",sql_user);
                 List<Map<String, Object>> user_list = jdbcTemplate.queryForList(sql_user);
                 if (user_list.size() > 1) {
                     for (int i = 0; i < user_list.size(); i++) {
@@ -183,7 +183,7 @@ public class UserServiceImpl implements UserService, HistoryService {
         List<Map<String, Object>> userList = new ArrayList<>();
         try {
             String sql = "SELECT * FROM friend_" + OfTenUtils.replace(uid) + " ORDER BY online DESC ";
-            System.out.println(sql);
+            log.info("getAllFriend sql:{}",sql);
             list = jdbcTemplate.query(sql, new Object[]{}, new RowMapper<Map<String, Object>>() {
                 @Override
                 public HashMap<String, Object> mapRow(ResultSet resultSet, int i) throws SQLException {
