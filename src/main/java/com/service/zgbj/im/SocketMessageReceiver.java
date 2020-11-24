@@ -46,6 +46,9 @@ public class SocketMessageReceiver {
                     SocketIOClient client = map.get(getToken(chatMessage.getToId()));
                     if(client != null){
                         SocketManager.sendChatMessage(client, chatMessage);
+                    }else{
+                        //添加分布式锁
+//                        SocketManager.addLineMsg(chatMessage);
                     }
                 }
 

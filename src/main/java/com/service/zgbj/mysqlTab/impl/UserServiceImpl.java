@@ -609,13 +609,16 @@ public class UserServiceImpl implements UserService, HistoryService {
                     chatMessage.setFromId(from_id);
                     chatMessage.setToId(to_id);
                     chatMessage.setBody(GsonUtil.BeanToJson(new TextBody("已添加" + map.get("username") + ",赶快打个招呼吧～")));
-                    HashMap<String, SocketIOClient> hashMap = SocketManager.mClientMap.get(to_id);
-                    SocketIOClient client = hashMap.get(getToken(to_id));
-                    if (client != null) {
-                        SocketManager.sendChatMessage(client, chatMessage);
-                    } else {
-                        SocketManager.addLineMsg(chatMessage);
-                    }
+
+                    SocketManager.publishImMessage(chatMessage);
+
+//                    HashMap<String, SocketIOClient> hashMap = SocketManager.mClientMap.get(to_id);
+//                    SocketIOClient client = hashMap.get(getToken(to_id));
+//                    if (client != null) {
+//                        SocketManager.sendChatMessage(client, chatMessage);
+//                    } else {
+//                        SocketManager.addLineMsg(chatMessage);
+//                    }
                     insetData(chatMessage, from_id);
                     return true;
                 } else {

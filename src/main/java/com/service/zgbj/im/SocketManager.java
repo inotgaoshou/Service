@@ -207,7 +207,7 @@ public class SocketManager {
 
         @Override
         public void onData(SocketIOClient socketIOClient, String s, AckRequest ackRequest) throws Exception {
-            System.out.println("监听到消息========" + s);
+            log.info("监听到消息========" + s);
             mAckRequest = ackRequest;
             ChatMessage chatMessage = GsonUtil.GsonToBean(s, ChatMessage.class);
             handleChatMessage(chatMessage, ackRequest);
@@ -227,15 +227,20 @@ public class SocketManager {
         int status = s.getMsgStatus();
         String token = chatService.getToken(to_id);
         if (token != null && !token.isEmpty()) {
-            HashMap<String, SocketIOClient> map = mClientMap.get(to_id);
-            SocketIOClient client = map.get(token);
+
             addRedEnvelopeMsg(bodyType, status, s);
             s.setMsgStatus(2);
-            if (client != null) {
-                sendChatMessage(client, s);
-            } else {
-                addLineMsg(s);
-            }
+
+            SocketManager.publishImMessage(s);
+
+//            HashMap<String, SocketIOClient> map = mClientMap.get(to_id);
+//            SocketIOClient client = map.get(token);
+//            if (client != null) {
+//                sendChatMessage(client, s);
+//            } else {
+//                addLineMsg(s);
+//            }
+
         } else {
             addLineMsg(s);
         }
@@ -286,17 +291,22 @@ public class SocketManager {
             for (int i = 0; i < msg.size(); i++) {
                 String toId = msg.get(i).getToId();
                 String pid = msg.get(i).getPid();
-                HashMap<String, SocketIOClient> map = mClientMap.get(toId);
-                SocketIOClient clients = map.get(chatService.getToken(toId));
                 ChatMessage chatMessage = msg.get(i);
                 chatMessage.setMsgStatus(2);
-                if (clients != null) {
-                    sendChatMessage(clients, chatMessage);
-                    Boolean b = chatService.removeMsg(pid);
-                    if (b) {
-                        System.out.println("-------删除离线消息成功--------" + pid);
-                    }
-                }
+
+                SocketManager.publishImMessage(chatMessage);
+
+                //TODO
+//                HashMap<String, SocketIOClient> map = mClientMap.get(toId);
+//                SocketIOClient clients = map.get(chatService.getToken(toId));
+//                if (clients != null) {
+//                    sendChatMessage(clients, chatMessage);
+//
+//                    Boolean b = chatService.removeMsg(pid);
+//                    if (b) {
+//                        System.out.println("-------删除离线消息成功--------" + pid);
+//                    }
+//                }
 
             }
         }

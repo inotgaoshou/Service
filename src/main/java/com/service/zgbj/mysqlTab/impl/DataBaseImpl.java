@@ -4,10 +4,12 @@ import com.corundumstudio.socketio.SocketIOServer;
 import com.service.zgbj.im.SocketManager;
 import com.service.zgbj.mysqlTab.DataBaseService;
 import com.service.zgbj.redis.JedisService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class DataBaseImpl implements DataBaseService {
 
@@ -27,7 +29,7 @@ public class DataBaseImpl implements DataBaseService {
         String createSql = "CREATE DATABASE IF NOT EXISTS mysql DEFAULT CHARACTER SET utf8";
         int code = jdbcTemplate.update(createSql);
         if (code > 0) {
-            System.out.println("数据库---mysql----创建!");
+            log.info("数据库---mysql----创建!");
         }
         createTable();
         new SocketManager(server, userService, chatService, historyService,jedisService);
