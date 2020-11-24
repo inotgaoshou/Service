@@ -8,12 +8,14 @@ import com.service.zgbj.im.SocketManager;
 import com.service.zgbj.mysqlTab.impl.ChatServiceImpl;
 import com.service.zgbj.mysqlTab.impl.UserServiceImpl;
 import com.service.zgbj.utils.GsonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 public class RedEnvelopeThread extends Thread{
 
     @Autowired
@@ -28,7 +30,7 @@ public class RedEnvelopeThread extends Thread{
     @Override
     public synchronized void run() {
         try {
-            System.out.println("线程开始运行-----");
+             log.info("线程开始运行-----");
             SocketIOServer service = SocketManager.getService();
             List<RedEnvelopeBean> envelope = chatService.getAllRedEnvelope();
             if (envelope != null && envelope.size() > 0){

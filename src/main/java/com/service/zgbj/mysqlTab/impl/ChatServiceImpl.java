@@ -6,6 +6,7 @@ import com.service.zgbj.im.SocketBean;
 import com.service.zgbj.mysqlTab.ChatService;
 import com.service.zgbj.mysqlTab.SocketConnectService;
 import com.service.zgbj.utils.GsonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class ChatServiceImpl implements ChatService,SocketConnectService{
     @Autowired
@@ -219,10 +221,10 @@ public class ChatServiceImpl implements ChatService,SocketConnectService{
             System.out.println(sql);
             int update = jdbcTemplate.update(sql);
             if (update > 0) {
-                System.out.println("修改成功");
+                log.info("updateToken token:{},uid:{},修改成功",token,uid);
             }
         } catch (Exception e) {
-            System.out.println("updateToken:" + e.toString());
+            log.error("updateToken",e);
         }
     }
 }

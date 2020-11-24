@@ -12,10 +12,12 @@ import com.service.zgbj.mysqlTab.impl.UserServiceImpl;
 import com.service.zgbj.utils.DateUtils;
 import com.service.zgbj.utils.GsonUtil;
 import com.service.zgbj.utils.OfTenUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 public class SocketManager {
 
 
@@ -71,7 +73,7 @@ public class SocketManager {
             System.out.println("--------客户端连接------");
 
             Boolean online = chatService.whereIsOnline(socketInfo.getUid());
-            System.out.println("是否存在:" + online);
+            log.info("是否存在:" + online);
             if (online) {
                 String token = chatService.getToken(socketInfo.getUid());
                 if (!token.isEmpty() && !token.equals(socketInfo.getToken())) {
@@ -147,13 +149,13 @@ public class SocketManager {
         public void onDisconnect(SocketIOClient socketIOClient) {
 
             HashMap<String, String[]> map = new HashMap<>();
-            System.out.println("---------客户端断开连接------");
+            log.info("---------客户端断开连接------");
             SocketBean socketInfo = getClientInfo(socketIOClient);
-            System.out.println("======token=====" + socketInfo.getToken());
-            System.out.println("======uid=====" + socketInfo.getUid());
-            System.out.println("======mobile=====" + socketInfo.getMobile());
-            System.out.println("======desc=====" + socketInfo.getDesc());
-            System.out.println("======netCode=====" + socketInfo.getOnline());
+            log.info("======token=====" + socketInfo.getToken());
+            log.info("======uid=====" + socketInfo.getUid());
+            log.info("======mobile=====" + socketInfo.getMobile());
+            log.info("======desc=====" + socketInfo.getDesc());
+            log.info("======netCode=====" + socketInfo.getOnline());
 
             try {
                 String json = sqlService.getAllFriend(socketInfo.getUid());
@@ -188,7 +190,7 @@ public class SocketManager {
             sqlService.updateUser(map);
             chatService.delete(socketInfo.getToken());
             mClientMap.remove(socketInfo.getUid());
-            System.out.println("---------当前连接人数-------" + mClientMap.size());
+            log.error("---------当前连接人数-------" + mClientMap.size());
         }
     }
 
@@ -255,13 +257,13 @@ public class SocketManager {
         s.setMsgStatus(2);
         Boolean aBoolean = chatService.insertChatMessage(s);
         if (aBoolean) {
-            System.out.println("-------添加离线消息成功--------");
+            log.info("-------添加离线消息成功--------");
         }
     }
 
     public static void sendChatMessage(SocketIOClient client, ChatMessage s) {
         String json = GsonUtil.BeanToJson(s);
-        System.out.println("发送消息========" + json);
+        log.info("发送消息========" + json);
         client.sendEvent("chat", json);
     }
 
@@ -279,7 +281,7 @@ public class SocketManager {
                     sendChatMessage(clients, chatMessage);
                     Boolean b = chatService.removeMsg(pid);
                     if (b) {
-                        System.out.println("-------删除离线消息成功--------" + pid);
+                        log.info("-------删除离线消息成功--------" + pid);
                     }
                 }
 

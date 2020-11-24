@@ -4,6 +4,7 @@ import com.service.zgbj.im.ChatMessage;
 import com.service.zgbj.mysqlTab.HistoryService;
 import com.service.zgbj.utils.GsonUtil;
 import com.service.zgbj.utils.OfTenUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class HistoryServiceImpl implements HistoryService {
 
@@ -37,7 +39,7 @@ public class HistoryServiceImpl implements HistoryService {
                 "displaytime INT (11)," +
                 "time BIGINT(20)" + ")" +
                 "ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET ='utf8mb4'";
-        System.out.println("Sql:-------" + sql);
+        log.info("Sql:-------" + sql);
         jdbcTemplate.update(sql);
     }
 
@@ -51,14 +53,14 @@ public class HistoryServiceImpl implements HistoryService {
             String sql_update = "UPDATE history_" + tName + " SET body_type = " + msg.getBodyType() + " WHERE pid = " + "'" + msg.getPid() + "'";
             int update = jdbcTemplate.update(sql_update);
             if (update > 0) {
-                System.out.println("更改历史消息成功!----表名-=== history_" + tName);
+                log.info("更改历史消息成功!----表名-=== history_" + tName);
             }
         } else {
             String sql = "insert into" + " history_" + tName + "(from_id,to_id,pid,type,time,body,body_type,msg_status,conversation,displaytime) value (?,?,?,?,?,?,?,?,?,?)";
             Object args[] = {msg.getFromId(), msg.getToId(), msg.getPid(), msg.getType(), msg.getTime(), msg.getBody(), msg.getBodyType(), msg.getMsgStatus(), msg.getConversation(), msg.getDisplaytime()};
             int code = jdbcTemplate.update(sql, args);
             if (code > 0) {
-                System.out.println("插入历史消息成功!----表名-=== history_" + tName);
+                log.info("插入历史消息成功!----表名-=== history_" + tName);
             }
         }
 
@@ -110,7 +112,7 @@ public class HistoryServiceImpl implements HistoryService {
             statusMap.put("msg", "没有更多记录了");
         }
         String json = GsonUtil.BeanToJson(statusMap);
-        System.out.println("历史记录===" + json);
+        log.info("历史记录===" + json);
         return json;
     }
 
@@ -145,14 +147,14 @@ public class HistoryServiceImpl implements HistoryService {
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
         if (list.size() > 0) {
             conversation = (String) list.get(0).get("conversation");
-            System.out.println("conversation   :::    " + conversation);
+            log.info("conversation   :::    " + conversation);
         } else {
             String sql2 = "SELECT * FROM history_" + t_name + " WHERE from_id = " + "'" + toId + "'" + " AND to_id = " + "'" + fromId + "'";
             System.out.println("sql  查询conversation :::    " + sql2);
             List<Map<String, Object>> list2 = jdbcTemplate.queryForList(sql2);
             if (list2.size() > 0) {
                 conversation = (String) list2.get(0).get("conversation");
-                System.out.println("conversation   :::    " + conversation);
+                log.info("conversation   :::    " + conversation);
             } else {
                 String t_name2 = OfTenUtils.replace(toId);
                 String sql3 = "SELECT * FROM history_" + t_name2 + " WHERE from_id = " + "'" + fromId + "'" + " AND to_id = " + "'" + toId + "'";
@@ -160,17 +162,17 @@ public class HistoryServiceImpl implements HistoryService {
                 List<Map<String, Object>> list3 = jdbcTemplate.queryForList(sql3);
                 if (list3.size() > 0) {
                     conversation = (String) list3.get(0).get("conversation");
-                    System.out.println("conversation   :::    " + conversation);
+                    log.info("conversation   :::    " + conversation);
                 }else {
                     String sql4 = "SELECT * FROM history_" + t_name2 + " WHERE from_id = " + "'" + toId + "'" + " AND to_id = " + "'" + fromId + "'";
-                    System.out.println("sql  查询conversation :::    " + sql4);
+                    log.info("sql  查询conversation :::    " + sql4);
                     List<Map<String, Object>> list4 = jdbcTemplate.queryForList(sql4);
                     if (list4.size() > 0) {
                         conversation = (String) list4.get(0).get("conversation");
-                        System.out.println("conversation   :::    " + conversation);
+                        log.info("conversation   :::    " + conversation);
                     }else {
                         conversation = OfTenUtils.getPid();
-                        System.out.println("未找到conversation   :::    " + conversation);
+                        log.info("未找到conversation   :::    " + conversation);
                     }
                 }
             }

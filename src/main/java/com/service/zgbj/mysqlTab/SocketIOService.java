@@ -1,6 +1,7 @@
 package com.service.zgbj.mysqlTab;
 
 import com.corundumstudio.socketio.SocketIOServer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -11,6 +12,7 @@ import java.net.InetAddress;
 /**
  * Created by fengzhangwei on 2020/5/14.
  */
+@Slf4j
 @Component
 @Order(value=1)
 public class SocketIOService implements CommandLineRunner {
@@ -30,7 +32,7 @@ public class SocketIOService implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         server.start();
-        System.out.println("socket.io启动成功！");
+        log.error("socket.io启动成功！");
         dataBaseService.displayDataBase(server);
     }
 }

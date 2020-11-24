@@ -3,10 +3,12 @@ package com.service.zgbj.mysqlTab.impl;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.service.zgbj.im.SocketManager;
 import com.service.zgbj.mysqlTab.DataBaseService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class DataBaseImpl implements DataBaseService {
 
@@ -24,7 +26,7 @@ public class DataBaseImpl implements DataBaseService {
         String createSql = "CREATE DATABASE IF NOT EXISTS mysql DEFAULT CHARACTER SET utf8";
         int code = jdbcTemplate.update(createSql);
         if (code > 0) {
-            System.out.println("数据库---mysql----创建!");
+            log.info("数据库---mysql----创建!");
         }
         createTable();
         new SocketManager(server, service, chatService, historyService);
@@ -47,7 +49,7 @@ public class DataBaseImpl implements DataBaseService {
                 "uid VARCHAR(255)," +
                 "username VARCHAR(255)" + ")" +
                 "ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET ='utf8mb4'";
-        System.out.println("SQL:======" + sql_user);
+        log.info("SQL:======" + sql_user);
 
         String sql_lin = "CREATE TABLE IF NOT EXISTS " + " table_offline_msg " + " (" +
                 "id INT (11) NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
@@ -62,7 +64,7 @@ public class DataBaseImpl implements DataBaseService {
                 "type INT(11)," +
                 "displaytime INT(11)" + ")" +
                 "ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET ='utf8mb4'";
-        System.out.println("SQL:======" + sql_lin);
+        log.info("SQL:======" + sql_lin);
 
         String sql_red = "CREATE TABLE IF NOT EXISTS " + " table_red_envelope " + " (" +
                 "id INT (11) NOT NULL AUTO_INCREMENT PRIMARY KEY ," +
@@ -74,7 +76,7 @@ public class DataBaseImpl implements DataBaseService {
                 "time BIGINT(11)," +
                 "to_id VARCHAR(255)" + ")" +
                 "ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET ='utf8mb4'";
-        System.out.println("SQL:======" + sql_red);
+        log.info("SQL:======" + sql_red);
 
 
         String sql_socket = "CREATE TABLE IF NOT EXISTS " + " table_socket" + " (" +
@@ -83,7 +85,7 @@ public class DataBaseImpl implements DataBaseService {
                 "token VARCHAR(255)," +
                 "mobile VARCHAR(255)" + ")" +
                 "ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET ='utf8mb4'";
-        System.out.println("SQL:======" + sql_socket);
+        log.info("SQL:======" + sql_socket);
 
         jdbcTemplate.update(sql_user);
         jdbcTemplate.update(sql_lin);

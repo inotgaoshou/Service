@@ -9,6 +9,7 @@ import com.service.zgbj.mysqlTab.HistoryService;
 import com.service.zgbj.mysqlTab.UserService;
 import com.service.zgbj.utils.GsonUtil;
 import com.service.zgbj.utils.OfTenUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService, HistoryService {
 
@@ -46,7 +48,7 @@ public class UserServiceImpl implements UserService, HistoryService {
                 "source INT (11)," +
                 "remark VARCHAR (255)" + ")" +
                 "ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET ='utf8'";
-        System.out.println("Sql:-------" + sql);
+        log.info("Sql:-------" + sql);
         jdbcTemplate.update(sql);
     }
 
@@ -66,7 +68,7 @@ public class UserServiceImpl implements UserService, HistoryService {
                 "source INT (11)," +
                 "content VARCHAR (255)" + ")" +
                 "ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET ='utf8'";
-        System.out.println("Sql:-------" + sql);
+        log.info("Sql:-------" + sql);
         jdbcTemplate.update(sql);
     }
 
@@ -219,7 +221,7 @@ public class UserServiceImpl implements UserService, HistoryService {
         }
         statusMap.put("data", userList);
         String json = GsonUtil.BeanToJson(statusMap);
-        System.out.println(json);
+        log.info("getAllFriend json:{}",json);
         return GsonUtil.unicodeToUtf8(json);
     }
 
@@ -301,7 +303,7 @@ public class UserServiceImpl implements UserService, HistoryService {
         }
         statusMap.put("data", userList);
         String json = GsonUtil.BeanToJson(statusMap);
-        System.out.println(json);
+        log.info("getAllAddFriendMsg json:{}",json);
         return GsonUtil.unicodeToUtf8(json);
     }
 
@@ -344,7 +346,7 @@ public class UserServiceImpl implements UserService, HistoryService {
         }
         statusMap.put("data", userMap);
         String json = GsonUtil.BeanToJson(statusMap);
-        System.out.println(json);
+        log.info("getFriendUserInfo json:{}",json);
         return GsonUtil.unicodeToUtf8(json);
     }
 
@@ -388,6 +390,7 @@ public class UserServiceImpl implements UserService, HistoryService {
         statusMap.put("data", userMap);
         String json = GsonUtil.BeanToJson(statusMap);
         System.out.println(json);
+        log.info("Login json:{}",json);
         return GsonUtil.unicodeToUtf8(json);
     }
 
@@ -426,7 +429,7 @@ public class UserServiceImpl implements UserService, HistoryService {
         }
         statusMap.put("data", new HashMap<>());
         String json = GsonUtil.BeanToJson(statusMap);
-        System.out.println(json);
+        log.info("register json:{}",json);
         return GsonUtil.unicodeToUtf8(json);
     }
 
@@ -462,7 +465,7 @@ public class UserServiceImpl implements UserService, HistoryService {
         }
         statusMap.put("data", userMap);
         String json = GsonUtil.BeanToJson(statusMap);
-        System.out.println(json);
+        log.info("getUserInfo json:{}",json);
         return GsonUtil.unicodeToUtf8(json);
     }
 
@@ -514,7 +517,7 @@ public class UserServiceImpl implements UserService, HistoryService {
         }
         statusMap.put("data", userMap);
         String json = GsonUtil.BeanToJson(statusMap);
-        System.out.println(json);
+        log.info("getUserInfoPhone json:{}",json);
         return GsonUtil.unicodeToUtf8(json);
     }
 
@@ -534,12 +537,12 @@ public class UserServiceImpl implements UserService, HistoryService {
                 message.setBody(name + "请求加为好友");
                 SocketManager.sendChatMessage(client, message);
             } else {
-                System.out.println("name is null");
+                log.info("name is null");
             }
         } else {
-            System.out.println("不在线");
+            log.info("name is null");
         }
-        System.out.println(json);
+        log.info("addFriendMsg json:{}",json);
         return GsonUtil.unicodeToUtf8(json);
     }
 
@@ -614,7 +617,7 @@ public class UserServiceImpl implements UserService, HistoryService {
                     return false;
                 }
             } catch (Exception e) {
-                System.out.println(e.toString());
+                log.error("addFriendTable ",e);
                 return false;
             }
 
@@ -635,7 +638,7 @@ public class UserServiceImpl implements UserService, HistoryService {
         }
         if (map != null && map.size() > 0) {
             String token = map.get(0).get("token").toString();
-            System.out.println("token:" + token);
+            log.info("token:{}" , token);
             return token;
         }
         return "";
@@ -645,11 +648,11 @@ public class UserServiceImpl implements UserService, HistoryService {
         createTableFriendMsg(from_id);
         createTableFriendMsg(to_id);
         String sql_from_update = "UPDATE " + "friend_msg_" + OfTenUtils.replace(from_id) + " SET friend_type =" + friend_type + " WHERE pid = " + "'" + pid + "'";
-        System.out.println(sql_from_update);
+        log.info("updateFriendMsg sql_from_update:{}",sql_from_update);
         int code = jdbcTemplate.update(sql_from_update);
         if (code > 0) {
             String sql_to_update = "UPDATE " + "friend_msg_" + OfTenUtils.replace(to_id) + " SET friend_type =" + friend_type + " WHERE pid = " + "'" + pid + "'";
-            System.out.println(sql_to_update);
+            log.info("updateFriendMsg code sql_from_update:{}",sql_from_update);
             int code_to = jdbcTemplate.update(sql_to_update);
             if (code_to > 0) {
                 return true;
@@ -666,19 +669,20 @@ public class UserServiceImpl implements UserService, HistoryService {
         String table_to_name = OfTenUtils.replace(to_id);
         try {
             String sql_from_select = "SELECT * FROM " + " friend_msg_" + table_from_name + " WHERE pid = " + "'" + pid + "'";
-            System.out.println(sql_from_select);
+            log.info("updateInsertTable sql_from_select:{}",sql_from_select);
             map_from_select = jdbcTemplate.queryForMap(sql_from_select);
         } catch (Exception e) {
             map_from_select = null;
         }
         if (map_from_select != null && map_from_select.size() > 0) {
             String sql_from_update = "UPDATE " + "friend_msg_" + table_from_name + " SET friend_type =" + friend_type + " WHERE pid = " + "'" + pid + "'";
-            System.out.println(sql_from_update);
+            log.info("updateInsertTable sql_from_update:{}",sql_from_update);
             int code = jdbcTemplate.update(sql_from_update);
             if (code > 0) {
                 try {
                     String sql_to_select = "SELECT * FROM " + " friend_msg_" + table_to_name + " WHERE pid = " + "'" + pid + "'";
                     System.out.println(sql_to_select);
+                    log.info("updateInsertTable sql_to_select:{}",sql_to_select);
                     map_to_select = jdbcTemplate.queryForMap(sql_to_select);
                 } catch (Exception e) {
                     map_to_select = null;
@@ -686,6 +690,7 @@ public class UserServiceImpl implements UserService, HistoryService {
                 if (map_to_select != null && map_to_select.size() > 0) {
                     String sql_to_update = "UPDATE " + "friend_msg_" + table_to_name + " SET friend_type =" + friend_type + " WHERE pid = " + "'" + pid + "'";
                     System.out.println(sql_to_update);
+                    log.info("updateInsertTable sql_to_update:{}",sql_to_update);
                     int code_to = jdbcTemplate.update(sql_to_update);
                     if (code_to > 0) {
                         statusMap.put("code", 1);
@@ -697,6 +702,7 @@ public class UserServiceImpl implements UserService, HistoryService {
                 } else {
                     String sql_to_insert = "INSERT into friend_msg_" + table_to_name + " (to_id,from_id,pid,friend_type,source,content) VALUE (?,?,?,?,?,?)";
                     System.out.println(sql_to_insert);
+                    log.info("updateInsertTable sql_to_insert:{}",sql_to_insert);
                     Object args[] = {to_id, from_id, pid, friend_type, source, content};
                     int code_to = jdbcTemplate.update(sql_to_insert, args);
                     if (code_to > 0) {
@@ -714,20 +720,20 @@ public class UserServiceImpl implements UserService, HistoryService {
         } else {
             try {
                 String sql_from_insert = "INSERT into friend_msg_" + table_from_name + " (to_id,from_id,pid,friend_type,source,content) VALUE (?,?,?,?,?,?)";
-                System.out.println(sql_from_insert);
+                log.info("updateInsertTable sql_from_insert:{}",sql_from_insert);
                 Object args[] = {to_id, from_id, pid, friend_type, source, content};
                 int code = jdbcTemplate.update(sql_from_insert, args);
                 if (code > 0) {
                     try {
                         String sql_to_select = "SELECT * FROM " + " friend_msg_" + table_to_name + " WHERE pid = " + "'" + pid + "'";
-                        System.out.println(sql_to_select);
+                        log.info("updateInsertTable sql_to_select:{}",sql_to_select);
                         map_to_select = jdbcTemplate.queryForMap(sql_to_select);
                     } catch (Exception e) {
                         map_to_select = null;
                     }
                     if (map_to_select != null && map_to_select.size() > 0) {
                         String sql_to_update = "UPDATE " + "friend_msg_" + table_to_name + " SET friend_type =" + friend_type + " WHERE pid = " + "'" + pid + "'";
-                        System.out.println(sql_to_update);
+                        log.info("updateInsertTable sql_to_update:{}",sql_to_update);
                         int code_to = jdbcTemplate.update(sql_to_update);
                         if (code_to > 0) {
                             statusMap.put("code", 1);
@@ -738,7 +744,7 @@ public class UserServiceImpl implements UserService, HistoryService {
                         }
                     } else {
                         String sql_to_insert = "INSERT into friend_msg_" + table_to_name + " (to_id,from_id,pid,friend_type,source,content) VALUE (?,?,?,?,?,?)";
-                        System.out.println(sql_to_insert);
+                        log.info("updateInsertTable sql_to_insert:{}",sql_to_insert);
                         Object args2[] = {to_id, from_id, pid, friend_type, source, content};
                         int code_to = jdbcTemplate.update(sql_to_insert, args2);
                         if (code_to > 0) {
@@ -755,7 +761,7 @@ public class UserServiceImpl implements UserService, HistoryService {
                     statusMap.put("msg", "失败");
                 }
             } catch (Exception e) {
-                System.out.println("错误:" + e.toString());
+                log.error("updateInsertTable",e);
             }
 
         }
@@ -775,7 +781,7 @@ public class UserServiceImpl implements UserService, HistoryService {
     public BigDecimal getUserMoney(String uid) {
         BigDecimal money = null;
         String sql = "SELECT * FROM table_user WHERE uid = " + "'" + uid + "'";
-        System.out.println(sql);
+        log.info("getUserMoney uid:{},sql:{}",uid,sql);
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         if (maps.size() > 0) {
             money = (BigDecimal) maps.get(0).get("money");
@@ -799,7 +805,7 @@ public class UserServiceImpl implements UserService, HistoryService {
                 "displaytime INT (11)," +
                 "time BIGINT(20)" + ")" +
                 "ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET ='utf8'";
-        System.out.println("Sql:-------" + sql);
+        log.info("createTable sql:{}",sql);
         jdbcTemplate.update(sql);
     }
 
@@ -811,7 +817,7 @@ public class UserServiceImpl implements UserService, HistoryService {
         Object args[] = {msg.getFromId(), msg.getToId(), msg.getPid(), msg.getType(), msg.getTime(), msg.getBody(), msg.getBodyType(), msg.getMsgStatus(), msg.getConversation(), msg.getDisplaytime()};
         int code = jdbcTemplate.update(sql, args);
         if (code > 0) {
-            System.out.println("插入历史消息成功!----表名-=== history_" + tName);
+            log.info("插入历史消息成功!----表名-=== history_{}" , tName);
         }
     }
 
@@ -832,36 +838,37 @@ public class UserServiceImpl implements UserService, HistoryService {
         createTable(fromId);
         createTable(toId);
         String sql = "SELECT * FROM history_" + t_name + " WHERE from_id = " + "'" + fromId + "'" + " AND to_id = " + "'" + toId + "'";
-        System.out.println("sql  查询conversation :::    " + sql);
+        log.info("getConversation sql  查询conversation ::sql:{}",sql);
         List<Map<String, Object>> list = jdbcTemplate.queryForList(sql);
         if (list.size() > 0) {
              conversation = (String) list.get(0).get("conversation");
-            System.out.println("conversation   :::    " + conversation);
+            log.info("getConversation sql  conversation {}",conversation);
         } else {
             String sql2 = "SELECT * FROM history_" + t_name + " WHERE from_id = " + "'" + toId + "'" + " AND to_id = " + "'" + fromId + "'";
-            System.out.println("sql  查询conversation :::    " + sql2);
+            log.info("getConversation sql2  查询conversation ::sql:{}",sql2);
             List<Map<String, Object>> list2 = jdbcTemplate.queryForList(sql2);
             if (list2.size() > 0) {
                 conversation = (String) list2.get(0).get("conversation");
-                System.out.println("conversation   :::    " + conversation);
+                log.info("getConversation sql  conversation {}",conversation);
             } else {
                 String t_name2 = OfTenUtils.replace(toId);
                 String sql3 = "SELECT * FROM history_" + t_name2 + " WHERE from_id = " + "'" + fromId + "'" + " AND to_id = " + "'" + toId + "'";
-                System.out.println("sql 查询conversation  :::    " + sql3);
+                log.info("getConversation sql3  查询conversation ::sql:{}",sql3);
+
                 List<Map<String, Object>> list3 = jdbcTemplate.queryForList(sql3);
                 if (list3.size() > 0) {
                     conversation = (String) list3.get(0).get("conversation");
                     System.out.println("conversation   :::    " + conversation);
                 }else {
                     String sql4 = "SELECT * FROM history_" + t_name2 + " WHERE from_id = " + "'" + toId + "'" + " AND to_id = " + "'" + fromId + "'";
-                    System.out.println("sql  查询conversation :::    " + sql4);
+                    log.info("getConversation sql4  查询conversation ::sql:{}",sql4);
                     List<Map<String, Object>> list4 = jdbcTemplate.queryForList(sql4);
                     if (list4.size() > 0) {
                         conversation = (String) list4.get(0).get("conversation");
-                        System.out.println("conversation   :::    " + conversation);
+                        log.info("getConversation sql  conversation {}",conversation);
                     }else {
                         conversation = OfTenUtils.getPid();
-                        System.out.println("未找到conversation   :::    " + conversation);
+                        log.info("getConversation 未找到conversation {}",conversation);
                     }
                 }
             }

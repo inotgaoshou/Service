@@ -4,6 +4,7 @@ import com.service.zgbj.im.LikePhotoBean;
 import com.service.zgbj.mysqlTab.FileService;
 import com.service.zgbj.utils.GsonUtil;
 import com.service.zgbj.utils.OfTenUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.Map;
 /**
  * Created by fengzhangwei on 2020/10/17.
  */
+@Slf4j
 @Service
 public class FileImpl implements FileService {
 
@@ -39,7 +41,7 @@ public class FileImpl implements FileService {
             statusMap.put("msg", "失败");
             statusMap.put("data", null);
         }
-        System.out.println("File-----sql:" + sql_select + "list == " + list.size());
+        log.info("File-----sql:" + sql_select + "list == " + list.size());
         return GsonUtil.BeanToJson(statusMap);
     }
 
@@ -60,7 +62,7 @@ public class FileImpl implements FileService {
             System.out.println(sql);
             int update = jdbcTemplate.update(sql);
             if (update > 0) {
-                System.out.println("修改FileUrl成功!----表名-=== file_url");
+                log.info("修改FileUrl成功!----表名-=== file_url");
             }
         }
     }
@@ -127,7 +129,7 @@ public class FileImpl implements FileService {
             String sql_delete = "DELETE FROM likePhoto_" + replace + " WHERE pid = " + "'" + pid + "'";
             int update = jdbcTemplate.update(sql_delete);
             if (update > 0){
-                System.out.println("删除成功 === likePhoto_" + replace);
+                log.info("删除成功 === likePhoto_" + replace);
             }
         }
     }
@@ -139,7 +141,7 @@ public class FileImpl implements FileService {
                 "filename VARCHAR (255)," +
                 "fileurl VARCHAR (255)" + ")" +
                 "ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET ='utf8'";
-        System.out.println("Sql:-------" + sql);
+        log.info("Sql:-------" + sql);
         jdbcTemplate.update(sql);
     }
 
@@ -152,7 +154,7 @@ public class FileImpl implements FileService {
                 "type INT (11)," +
                 "time BIGINT(20)" + ")" +
                 "ENGINE=INNODB AUTO_INCREMENT=1 DEFAULT CHARSET ='utf8mb4'";
-        System.out.println("Sql:-------" + sql);
+        log.info("Sql:-------" + sql);
         jdbcTemplate.update(sql);
     }
 }

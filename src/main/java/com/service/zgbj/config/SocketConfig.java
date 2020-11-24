@@ -4,13 +4,13 @@ import com.corundumstudio.socketio.AuthorizationListener;
 import com.corundumstudio.socketio.HandshakeData;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.corundumstudio.socketio.annotation.SpringAnnotationScanner;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.net.InetAddress;
-
+@Slf4j
 @Configuration
 public class SocketConfig {
 
@@ -70,7 +70,7 @@ public class SocketConfig {
         if(StringUtils.isNotBlank(hostname)){
             config.setHostname(hostname);
         }
-        System.out.println("SocketIOServer ====== " + config.getHostname());
+        log.info("SocketIOServer ====== {}",config.getHostname());
         config.setAuthorizationListener(new AuthorizationListener() {//类似过滤器
                                             @Override
                                             public boolean isAuthorized(HandshakeData data) {
@@ -79,7 +79,7 @@ public class SocketConfig {
                                                 // String username = data.getSingleUrlParam("username");
                                                 // String password = data.getSingleUrlParam("password");
                                                 String uid = data.getSingleUrlParam("uid");
-                                                System.out.println("SocketIOServer uid====== " + uid);
+                                                log.info("SocketIOServer uid======{}" ,uid);
                                                 return true;
                                             }
                                         }
