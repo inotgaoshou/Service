@@ -45,7 +45,7 @@ public class SocketConfig {
     /**
      * 注册netty-socketio服务端
      */
-    @Bean
+    @Bean("socketIOServer")
     public SocketIOServer socketIOServer() {
         com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
         // 重新启动端口被占用

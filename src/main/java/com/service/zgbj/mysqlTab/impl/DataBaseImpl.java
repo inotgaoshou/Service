@@ -1,7 +1,7 @@
 package com.service.zgbj.mysqlTab.impl;
 
 import com.corundumstudio.socketio.SocketIOServer;
-import com.service.zgbj.im.SocketManager;
+import com.service.zgbj.socketio.SocketManager;
 import com.service.zgbj.mysqlTab.DataBaseService;
 import com.service.zgbj.redis.JedisService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,7 @@ public class DataBaseImpl implements DataBaseService {
             log.info("数据库---im_app----创建!");
         }
         createTable();
-        new SocketManager(server, service, chatService, historyService, jedisService);
+//        new SocketManager(server, service, chatService, historyService, jedisService);
     }
 
     private void createTable() {

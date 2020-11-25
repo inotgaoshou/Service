@@ -1,7 +1,7 @@
 package com.service.zgbj.config;
 
 import com.service.zgbj.constant.Constant;
-import com.service.zgbj.im.SocketMessageReceiver;
+import com.service.zgbj.socketio.SocketMessageReceiver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +27,9 @@ public class RedisSubConfig {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
         //接受消息的key 多个key即添加多个监听, listenerAdapter中的实现类名字要对应
-        container.addMessageListener(socketPushMessageListenerAdapter(), new PatternTopic(Constant.RedisKey.im_message_subscribe));
+        container.addMessageListener(socketPushMessageListenerAdapter(), new PatternTopic(Constant.RedisKey.single_message_subscribe));
+        container.addMessageListener(socketRoomMessageListenerAdapter(), new PatternTopic(Constant.RedisKey.room_message_subscribe));
+
         return container;
     }
 
@@ -39,5 +41,10 @@ public class RedisSubConfig {
     @Bean
     public MessageListenerAdapter socketPushMessageListenerAdapter() {
         return new MessageListenerAdapter(socketPushMessageReceiver, "receiveMessage");
+    }
+
+    @Bean
+    public MessageListenerAdapter socketRoomMessageListenerAdapter() {
+        return new MessageListenerAdapter(socketPushMessageReceiver, "receiveRoomMessage");
     }
 }

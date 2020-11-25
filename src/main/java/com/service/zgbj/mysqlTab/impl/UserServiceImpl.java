@@ -3,7 +3,7 @@ package com.service.zgbj.mysqlTab.impl;
 import com.corundumstudio.socketio.SocketIOClient;
 import com.service.zgbj.im.ChatMessage;
 import com.service.zgbj.im.FriendBean;
-import com.service.zgbj.im.SocketManager;
+import com.service.zgbj.socketio.SocketManager;
 import com.service.zgbj.im.TextBody;
 import com.service.zgbj.mysqlTab.HistoryService;
 import com.service.zgbj.mysqlTab.UserService;
@@ -26,6 +26,9 @@ public class UserServiceImpl implements UserService, HistoryService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private SocketManager socketManager;
 
 
     @Override
@@ -609,7 +612,7 @@ public class UserServiceImpl implements UserService, HistoryService {
                     if (client != null) {
                         SocketManager.sendChatMessage(client, chatMessage);
                     } else {
-                        SocketManager.addLineMsg(chatMessage);
+                        socketManager.addLineMsg(chatMessage);
                     }
                     insetData(chatMessage, from_id);
                     return true;

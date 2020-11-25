@@ -1,8 +1,9 @@
-package com.service.zgbj.im;
+package com.service.zgbj.socketio;
 
 import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
-import com.service.zgbj.constant.Constant;
+import com.service.zgbj.im.ChatMessage;
+import com.service.zgbj.im.MessageType;
 import com.service.zgbj.redis.JedisLockService;
 import com.service.zgbj.redis.JedisService;
 import com.service.zgbj.utils.GsonUtil;
@@ -36,25 +37,57 @@ public class SocketMessageReceiver {
     @Autowired
     protected JedisLockService jedisLockService;
 
+    /**
+     * 单聊
+     * @param message
+     */
     public void receiveMessage(String message) {
         log.info("receive socket push message, message = {}", message);
         try {
             ChatMessage chatMessage = GsonUtil.GsonToBean(message, ChatMessage.class);
-//            if(chatMessage.getType() == MessageType.MSG_SINGLE_CHAT){
-//                HashMap<String, SocketIOClient> map = SocketManager.mClientMap.get(chatMessage.getToId());
-//                if(map != null){
-//                    SocketIOClient client = map.get(getToken(chatMessage.getToId()));
-//                    if(client != null){
-//                        SocketManager.sendChatMessage(client, chatMessage);
-//                    }else{
-//                        //添加分布式锁
-////                        SocketManager.addLineMsg(chatMessage);
-//                    }
-//                }
-//
-//            }else if(chatMessage.getType() == MessageType.MSG_ROOM_CHAT){
-//
-//            }
+            if(chatMessage.getType() == MessageType.MSG_SINGLE_CHAT){
+                HashMap<String, SocketIOClient> map = SocketManager.mClientMap.get(chatMessage.getToId());
+                if(map != null){
+                    String token = getToken(chatMessage.getToId());
+                    SocketIOClient client = map.get(token);
+                    log.info("chatMessage.getToId:{},token:{},client:{}",chatMessage.getToId(),token,client);
+                    if(client != null){
+                        SocketManager.sendChatMessage(client, chatMessage);
+                    }else{
+                        //添加分布式锁
+//                        SocketManager.addLineMsg(chatMessage);
+                    }
+                }
+
+            }else if(chatMessage.getType() == MessageType.MSG_ROOM_CHAT){
+
+            }
+        } catch (Exception e) {
+            log.error("receive  socket push message error, message = {}", message, e);
+        }
+    }
+
+    /**
+     * 聊天室
+     * @param message
+     */
+    public void receiveRoomMessage(String message) {
+        log.info("receiveRoomMessage socket push message, message = {}", message);
+        try {
+            ChatMessage chatMessage = GsonUtil.GsonToBean(message, ChatMessage.class);
+            HashMap<String, SocketIOClient> map = SocketManager.mClientMap.get(chatMessage.getToId());
+            if(map != null){
+                String token = getToken(chatMessage.getToId());
+                SocketIOClient client = map.get(token);
+                log.info("chatMessage.getToId:{},token:{},client:{}",chatMessage.getToId(),token,client);
+                if(client != null){
+                    SocketManager.sendChatMessage(client, chatMessage);
+                }else{
+                    //添加分布式锁
+//                        SocketManager.addLineMsg(chatMessage);
+                }
+            }
+
         } catch (Exception e) {
             log.error("receive  socket push message error, message = {}", message, e);
         }
